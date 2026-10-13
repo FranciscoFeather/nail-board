@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Nail Inspiration Board</title>
+<style>
+:root{--blush:#fbe3e8;--blush2:#fff3f5;--rose:#d98aa0;--rose2:#c4708a;--sand:#f4eee9;--ink:#5a4a4f;--mute:#9d8c91;--line:#eddcdf}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;background:#fff;color:var(--ink);padding-bottom:20px}
+header{background:var(--blush2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px}
+h1{margin:0 0 8px;text-align:center;font:italic 24px Georgia,serif;color:var(--rose2)}
+nav{display:flex;gap:8px;max-width:480px;margin:auto}
+nav button{flex:1;min-height:48px;border-radius:24px;background:#fff;border:1.5px solid var(--line);color:var(--mute);font-size:16px}
+nav button.on{background:var(--rose);border-color:var(--rose);color:#fff}
+main{max-width:860px;margin:auto;padding:12px 14px}
+button{font:inherit;font-weight:600;border:0;border-radius:14px;min-height:48px;padding:0 16px;background:var(--blush);color:var(--rose2);cursor:pointer}
+button:active{transform:scale(.97)}
+.pri{background:var(--rose);color:#fff}.dng{background:var(--sand);color:#a4574f}
+.tip{background:var(--sand);border-radius:16px;padding:12px 14px;font-size:14px;line-height:1.45;margin-bottom:12px}
+.tip b{color:var(--rose2)}
+.note{font-size:13px;color:var(--mute);line-height:1.5;background:var(--blush2);border-radius:14px;padding:12px;margin-top:18px}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mute);margin:14px 0 6px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:40px;padding:0 14px;border-radius:20px;background:#fff;border:1.5px solid var(--line);color:var(--ink);font-size:14px;font-weight:500}
+.chip.on{background:var(--rose);border-color:var(--rose);color:#fff}
+.chip small{opacity:.7}
+.sw{width:36px;height:36px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line);padding:0;min-height:0}
+.sw.on{box-shadow:0 0 0 3px var(--rose)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;margin-top:12px}
+.th{aspect-ratio:3/4;border-radius:14px;background:var(--sand) center/cover;position:relative;padding:0;min-height:0;overflow:hidden}
+.dots{position:absolute;left:5px;bottom:5px;display:flex;gap:3px}
+.dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid #fff;box-shadow:0 0 3px rgba(0,0,0,.25)}
+.badge{position:absolute;top:5px;right:5px;background:rgba(255,255,255,.9);color:var(--rose2);font-size:10px;border-radius:8px;padding:2px 6px}
+.empty{text-align:center;color:var(--mute);padding:34px 10px}
+input[type=text],textarea{font:inherit;font-size:16px;width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;min-height:48px;color:var(--ink);background:#fff}
+input:focus,textarea:focus{outline:none;border-color:var(--rose)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hands{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+@media(min-width:700px){.hands{grid-template-columns:1fr 1fr}}
+.hand{background:var(--blush2);border-radius:20px;padding:12px}
+.hand h3{margin:0 0 8px;text-align:center;font:italic 17px Georgia,serif;color:var(--rose2)}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.slot{aspect-ratio:3/5;border-radius:12px;background:#fff center/cover;border:1.5px dashed var(--rose);color:var(--mute);font-size:11px;padding:0;min-height:0;position:relative;overflow:hidden;font-weight:500}
+.slot.full{border-style:solid;border-color:#fff}
+.slot span{position:absolute;left:0;right:0;bottom:0;background:rgba(255,255,255,.85);padding:3px 0;font-size:10px;color:var(--ink)}
+.pal{display:flex;height:34px;border-radius:12px;overflow:hidden;margin-top:12px}.pal div{flex:1}
+.setcard{display:flex;align-items:center;gap:10px;background:var(--blush2);border-radius:16px;padding:10px;margin-top:8px}
+.setcard .m{flex:1;min-width:0;font-weight:600}
+.mini{display:flex;gap:2px}.mini i{width:18px;height:28px;border-radius:5px;background:var(--sand) center/cover;display:block}
+.modal{position:fixed;inset:0;background:rgba(90,74,79,.5);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:700px){.modal{align-items:center}}
+.sheet{background:#fff;width:100%;max-width:560px;max-height:94vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px)}
+@media(min-width:700px){.sheet{border-radius:24px}}
+.big{width:100%;max-height:52vh;object-fit:contain;border-radius:14px;background:var(--sand);display:block}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:20px;z-index:30;font-size:14px}
+</style></head><body>
+<header><h1>Nail Inspiration Board ✿</h1>
+<nav><button data-t="gal">My Gallery</button><button data-t="sets">My Nail Sets</button></nav></header>
+<main>
+<div class="tip">💡 <b>Tip:</b> open this page in <b>Safari</b>, not the preview inside Messages (the preview can't save or edit). Then tap <b>Share → Add to Home Screen</b> so it opens like an app.</div>
+<div id="view"></div>
+<div class="note"><b>Where your things are saved:</b> pictures and sets are kept on this device and in this browser only. Nothing is uploaded anywhere. Clearing Safari website data erases them, and they won't appear on another phone or computer.</div>
+</main>
+<div id="modalRoot"></div>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<script>
+'use strict';
+const FINGERS=['Thumb','Index','Middle','Ring','Pinky'];
+const BASIC=[['Red','#d64550'],['Pink','#f29bb5'],['Blush','#f7d3d9'],['Nude','#e3c1a8'],['Peach','#fbc6a4'],['Orange','#f0914e'],['Yellow','#f6e07a'],['Green','#9bcfa8'],['Blue','#8fb8e3'],['Lavender','#cdb8ec'],['Purple','#9a6bc4'],['Brown','#8b5e4b'],['White','#ffffff'],['Black','#2b2528'],['Silver','#c9ccd2'],['Gold','#d9b65c']];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+let M={images:[],sets:[],cur:null}; // metadata
+let IMG={},TH={};                   // id -> dataURL (full / thumbnail)
+let tab='gal',fHand='',fFinger='',fColor='';
+
+/* ---- storage: IndexedDB ---- */
+let db=null;
+const open=()=>new Promise(r=>{try{const q=indexedDB.open('nailplanner',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>{db=q.result;r()};q.onerror=()=>r()}catch(e){r()}});
+const get=k=>new Promise(r=>{if(!db)return r(null);try{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result??null);q.onerror=()=>r(null)}catch(e){r(null)}});
+const put=(k,v)=>new Promise(r=>{if(!db)return r(false);try{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>r(true);t.onerror=()=>r(false)}catch(e){r(false)}});
+const del=k=>new Promise(r=>{if(!db)return r();try{const t=db.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>r()}catch(e){r()}});
+let st;const save=()=>{clearTimeout(st);st=setTimeout(async()=>{if(!await put('board',M))toast('Could not save – is private browsing on?')},200)};
+async function load(){
+ await open();
+ const b=await get('board');
+ if(b){M=b;for(const i of M.images){IMG[i.id]=await get('img:'+i.id);TH[i.id]=await get('th:'+i.id)||IMG[i.id]}}
+ else{ // bring over pictures from the earlier planner, if any
+  const old=await get('state');
+  if(old&&old.S&&old.IMG){for(const i of old.S.inspo||[]){if(!old.IMG[i.id])continue;IMG[i.id]=old.IMG[i.id];TH[i.id]=await shrink(old.IMG[i.id],300);
+    await put('img:'+i.id,IMG[i.id]);await put('th:'+i.id,TH[i.id]);M.images.push({id:i.id,hand:'',finger:'',colors:[],note:[...(i.tags||[]),i.note].filter(Boolean).join(' · ')})}
+   save()}}
+ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+
+/* ---- images ---- */
+function shrink(src,max){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.onerror=rej;im.src=src})}
+$('#file').onchange=async e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length)return;toast('Adding '+fs.length+'…');let n=0;
+ for(const f of fs){const u=URL.createObjectURL(f);try{const id=uid();IMG[id]=await shrink(u,1100);TH[id]=await shrink(u,300);
+  await put('img:'+id,IMG[id]);await put('th:'+id,TH[id]);
+  M.images.unshift({id,hand:fHand,finger:fFinger,colors:[],note:''});n++}catch(x){}URL.revokeObjectURL(u)}
+ save();render();toast(n+' added 💕')};
+
+/* ---- views ---- */
+const imgById=id=>M.images.find(i=>i.id===id);
+const curSet=()=>M.sets.find(s=>s.id===M.cur);
+const cname=c=>c.n||c.h;
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+ $('#view').innerHTML=tab==='gal'?vGal():vSets();bind()}
+function vGal(){
+ const cols=[];M.images.forEach(i=>i.colors.forEach(c=>{if(!cols.some(x=>x.h===c.h))cols.push(c)}));
+ const list=M.images.filter(i=>(!fHand||i.hand===fHand)&&(!fFinger||String(i.finger)===fFinger)&&(!fColor||i.colors.some(c=>c.h===fColor)));
+ const cnt=f=>M.images.filter(i=>(!fHand||i.hand===fHand)&&String(i.finger)===String(f)).length;
+ return `<button class="pri" id="add" style="width:100%">＋ Add pictures</button>
+ <span class="lbl">Hand</span><div class="chips">${[['','All'],['L','Left hand'],['R','Right hand']].map(([v,t])=>`<button class="chip ${fHand===v?'on':''}" data-h="${v}">${t}</button>`).join('')}</div>
+ <span class="lbl">Finger</span><div class="chips"><button class="chip ${fFinger===''?'on':''}" data-f="">All</button>${FINGERS.map((f,i)=>`<button class="chip ${fFinger===String(i)?'on':''}" data-f="${i}">${f} <small>${cnt(i)}</small></button>`).join('')}</div>
+ ${cols.length?`<span class="lbl">Color</span><div class="chips"><button class="chip ${fColor===''?'on':''}" data-c="">All</button>${cols.map(c=>`<button class="sw ${fColor===c.h?'on':''}" data-c="${c.h}" title="${esc(cname(c))}" style="background:${c.h}"></button>`).join('')}</div>`:''}
+ ${list.length?`<div class="gal">${list.map(i=>`<button class="th" data-v="${i.id}" style="background-image:url(${TH[i.id]})">${i.finger!==''?`<span class="badge">${i.hand||''} ${FINGERS[i.finger]}</span>`:''}<span class="dots">${i.colors.slice(0,5).map(c=>`<i style="background:${c.h}"></i>`).join('')}</span></button>`).join('')}</div>`
+ :`<div class="empty">${M.images.length?'No pictures match these filters.':'Your board is empty.<br>Tap “Add pictures” to save your nail inspo 💕'}</div>`}`}
+function mini(s){return `<div class="mini">${['L','R'].flatMap(h=>[0,1,2,3,4].map(i=>{const id=s.slots[h+i];return `<i style="${id&&TH[id]?`background-image:url(${TH[id]})`:''}"></i>`})).join('')}</div>`}
+function vSets(){const s=curSet();
+ return `<button class="pri" id="newset" style="width:100%">＋ New nail set</button>
+ ${M.sets.map(x=>`<div class="setcard"><div class="m">${esc(x.name)}</div>${mini(x)}<button data-open="${x.id}" ${x.id===M.cur?'class="pri"':''}>${x.id===M.cur?'Viewing':'Open'}</button></div>`).join('')}
+ ${s?`<span class="lbl">Set name</span><input type="text" id="sname" value="${esc(s.name)}">
+ <div class="hands">${['L','R'].map(h=>`<div class="hand"><h3>${h==='L'?'Left hand':'Right hand'}</h3><div class="slots">${(h==='L'?[4,3,2,1,0]:[0,1,2,3,4]).map(i=>{const id=s.slots[h+i];return `<button class="slot ${id&&TH[id]?'full':''}" data-slot="${h+i}" style="${id&&TH[id]?`background-image:url(${TH[id]})`:''}">${id&&TH[id]?'':'＋'}<span>${FINGERS[i]}</span></button>`}).join('')}</div></div>`).join('')}</div>
+ <div class="row" style="margin-top:14px"><button id="dup">Duplicate set</button><button id="clr">Clear all</button><button class="dng" id="delset">Delete set</button></div>`
+ :`<div class="empty">No sets yet.<br>Tap “New nail set” to start planning.</div>`}`}
+
+function bind(){
+ const on=(q,f)=>document.querySelectorAll(q).forEach(b=>b.onclick=()=>f(b));
+ if($('#add'))$('#add').onclick=()=>$('#file').click();
+ on('[data-h]',b=>{fHand=b.dataset.h;render()});on('[data-f]',b=>{fFinger=b.dataset.f;render()});on('[data-c]',b=>{fColor=b.dataset.c;render()});
+ on('[data-v]',b=>viewImg(b.dataset.v));
+ if($('#newset'))$('#newset').onclick=()=>{const s={id:uid(),name:'My new set',slots:{}};M.sets.unshift(s);M.cur=s.id;save();render();const n=$('#sname');n.focus();n.select()};
+ on('[data-open]',b=>{M.cur=b.dataset.open;save();render()});
+ if($('#sname'))$('#sname').oninput=e=>{curSet().name=e.target.value;save()};
+ on('[data-slot]',b=>pick(b.dataset.slot));
+ if($('#dup'))$('#dup').onclick=()=>{const o=curSet(),c=JSON.parse(JSON.stringify(o));c.id=uid();c.name=o.name+' (copy)';M.sets.splice(M.sets.indexOf(o)+1,0,c);M.cur=c.id;save();render()};
+ if($('#clr'))$('#clr').onclick=()=>{if(confirm('Empty every nail in this set?')){curSet().slots={};save();render()}};
+ if($('#delset'))$('#delset').onclick=()=>{const o=curSet();if(!confirm('Delete “'+o.name+'”?'))return;M.sets=M.sets.filter(x=>x!==o);M.cur=M.sets[0]?.id||null;save();render()};
+}
+
+/* ---- modals ---- */
+function modal(h){const r=$('#modalRoot');r.innerHTML=`<div class="modal"><div class="sheet">${h}</div></div>`;r.firstChild.onclick=e=>{if(e.target===r.firstChild)close()};return r.querySelector('.sheet')}
+function close(){$('#modalRoot').innerHTML='';render()}
+function viewImg(id){const i=imgById(id);
+ const sh=modal(`<img class="big" src="${IMG[id]}">
+ <span class="lbl">Hand</span><div class="chips" id="hh"></div>
+ <span class="lbl">Finger</span><div class="chips" id="ff"></div>
+ <span class="lbl">Colors</span><div class="chips" id="cc"></div>
+ <div class="row" style="margin-top:8px"><input type="color" id="cp" value="#f29bb5" style="width:56px;height:48px;border:0;background:none;padding:0"><input type="text" id="cn" placeholder="Custom color name (optional)" style="flex:1;min-width:0"><button id="ca">Add</button></div>
+ <span class="lbl">Note</span><textarea id="nn" rows="2" placeholder="Anything to remember…">${esc(i.note)}</textarea>
+ <div class="row" style="margin-top:14px"><button class="dng" id="rm">Delete</button><button class="pri" id="ok" style="flex:1">Done</button></div>`);
+ const draw=()=>{
+  sh.querySelector('#hh').innerHTML=[['','None'],['L','Left'],['R','Right']].map(([v,t])=>`<button class="chip ${i.hand===v?'on':''}" data-a="${v}">${t}</button>`).join('');
+  sh.querySelector('#ff').innerHTML=`<button class="chip ${i.finger===''?'on':''}" data-b="">None</button>`+FINGERS.map((f,k)=>`<button class="chip ${i.finger===k?'on':''}" data-b="${k}">${f}</button>`).join('');
+  const extra=i.colors.filter(c=>!BASIC.some(b=>b[1]===c.h));
+  sh.querySelector('#cc').innerHTML=[...BASIC.map(([n,h])=>({n,h})),...extra].map(c=>`<button class="chip ${i.colors.some(x=>x.h===c.h)?'on':''}" data-k="${c.h}" data-n="${esc(c.n)}" style="display:inline-flex;align-items:center;gap:6px"><span style="width:16px;height:16px;border-radius:50%;background:${c.h};border:1px solid rgba(0,0,0,.15)"></span>${esc(cname(c))}</button>`).join('');
+  sh.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{i.hand=b.dataset.a;save();draw()});
+  sh.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{i.finger=b.dataset.b===''?'':+b.dataset.b;save();draw()});
+  sh.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const h=b.dataset.k;i.colors=i.colors.some(c=>c.h===h)?i.colors.filter(c=>c.h!==h):[...i.colors,{n:b.dataset.n,h}];save();draw()})};
+ draw();
+ sh.querySelector('#ca').onclick=()=>{const h=sh.querySelector('#cp').value,n=sh.querySelector('#cn').value.trim();if(!i.colors.some(c=>c.h===h))i.colors.push({n,h});sh.querySelector('#cn').value='';save();draw()};
+ sh.querySelector('#nn').oninput=e=>{i.note=e.target.value;save()};
+ sh.querySelector('#ok').onclick=close;
+ sh.querySelector('#rm').onclick=async()=>{if(!confirm('Delete this picture?'))return;M.images=M.images.filter(x=>x!==i);M.sets.forEach(s=>{for(const k in s.slots)if(s.slots[k]===id)delete s.slots[k]});delete IMG[id];delete TH[id];await del('img:'+id);await del('th:'+id);if(String(fColor)&&!M.images.some(x=>x.colors.some(c=>c.h===fColor)))fColor='';save();close()}}
+function pick(k){const s=curSet(),h=k[0],f=+k[1];
+ const score=i=>(i.hand===h?1:0)+(i.finger===f?2:0);
+ const list=[...M.images].sort((a,b)=>score(b)-score(a));
+ const sh=modal(`<h3 style="margin:0 0 4px;font:italic 20px Georgia,serif;color:var(--rose2)">${h==='L'?'Left':'Right'} ${FINGERS[f].toLowerCase()}</h3><div class="sub" style="color:var(--mute);font-size:13px">Pictures saved for this finger come first.</div>
+ ${list.length?`<div class="gal">${list.map(i=>`<button class="th" data-p="${i.id}" style="background-image:url(${TH[i.id]});${s.slots[k]===i.id?'outline:4px solid var(--rose)':''}"></button>`).join('')}</div>`:'<div class="empty">Add some pictures in My Gallery first.</div>'}
+ <div class="row" style="margin-top:14px">${s.slots[k]?'<button class="dng" id="rmv">Remove</button>':''}<button class="pri" id="ok" style="flex:1">Cancel</button></div>`);
+ sh.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{s.slots[k]=b.dataset.p;save();close()});
+ const r=sh.querySelector('#rmv');if(r)r.onclick=()=>{delete s.slots[k];save();close()};
+ sh.querySelector('#ok').onclick=close}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();scrollTo(0,0)});
+load().then(render);
+</script></body></html>
