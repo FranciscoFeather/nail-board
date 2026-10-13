@@ -53,6 +53,11 @@ input:focus,textarea:focus{outline:none;border-color:var(--rose)}
 .sheet{background:#fff;width:100%;max-width:560px;max-height:94vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px)}
 @media(min-width:700px){.sheet{border-radius:24px}}
 .big{width:100%;max-height:52vh;object-fit:contain;border-radius:14px;background:var(--sand);display:block}
+.clear{width:100%;margin-top:12px;background:linear-gradient(90deg,var(--rose),#e7a3b6);color:#fff}
+.mock{margin-top:12px;background:var(--blush2);border-radius:16px;padding:10px}
+.mock img{width:100%;max-height:52vh;object-fit:contain;border-radius:12px;background:#fff;display:block}
+.mk{position:absolute;top:5px;left:5px;background:rgba(255,255,255,.9);font-size:11px;border-radius:8px;padding:1px 5px}
+.steps{font-size:15px;line-height:1.55;margin:10px 0 0;padding-left:22px}
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:20px;z-index:30;font-size:14px}
 </style></head><body>
 <header><h1>Nail Inspiration Board ✿</h1>
@@ -60,16 +65,18 @@ input:focus,textarea:focus{outline:none;border-color:var(--rose)}
 <main>
 <div class="tip">💡 <b>Tip:</b> open this page in <b>Safari</b>, not the preview inside Messages (the preview can't save or edit). Then tap <b>Share → Add to Home Screen</b> so it opens like an app.</div>
 <div id="view"></div>
-<div class="note"><b>Where your things are saved:</b> pictures and sets are kept on this device and in this browser only. Nothing is uploaded anywhere. Clearing Safari website data erases them, and they won't appear on another phone or computer.</div>
+<div class="note"><b>Where your things are saved:</b> pictures and sets are kept on this device and in this browser only. Nothing is uploaded anywhere, except a picture you choose to send to Inu. Clearing Safari website data erases them, and they won't appear on another phone or computer.</div>
 </main>
 <div id="modalRoot"></div>
 <input type="file" id="file" accept="image/*" multiple hidden>
+<input type="file" id="mfile" accept="image/*" hidden>
 <script>
 'use strict';
 const FINGERS=['Thumb','Index','Middle','Ring','Pinky'];
 const BASIC=[['Red','#d64550'],['Pink','#f29bb5'],['Blush','#f7d3d9'],['Nude','#e3c1a8'],['Peach','#fbc6a4'],['Orange','#f0914e'],['Yellow','#f6e07a'],['Green','#9bcfa8'],['Blue','#8fb8e3'],['Lavender','#cdb8ec'],['Purple','#9a6bc4'],['Brown','#8b5e4b'],['White','#ffffff'],['Black','#2b2528'],['Silver','#c9ccd2'],['Gold','#d9b65c']];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const BOT='https://t.me/Wckd_crew_dashbot'; // Inu, the family assistant on Telegram
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 let M={images:[],sets:[],cur:null}; // metadata
 let IMG={},TH={};                   // id -> dataURL (full / thumbnail)
@@ -85,7 +92,7 @@ let st;const save=()=>{clearTimeout(st);st=setTimeout(async()=>{if(!await put('b
 async function load(){
  await open();
  const b=await get('board');
- if(b){M=b;for(const i of M.images){IMG[i.id]=await get('img:'+i.id);TH[i.id]=await get('th:'+i.id)||IMG[i.id]}}
+ if(b){M=b;for(const i of M.images){IMG[i.id]=await get('img:'+i.id);TH[i.id]=await get('th:'+i.id)||IMG[i.id];if(i.mock)IMG[i.mock]=await get('img:'+i.mock)}}
  else{ // bring over pictures from the earlier planner, if any
   const old=await get('state');
   if(old&&old.S&&old.IMG){for(const i of old.S.inspo||[]){if(!old.IMG[i.id])continue;IMG[i.id]=old.IMG[i.id];TH[i.id]=await shrink(old.IMG[i.id],300);
@@ -117,7 +124,7 @@ function vGal(){
  <span class="lbl">Hand</span><div class="chips">${[['','All'],['L','Left hand'],['R','Right hand']].map(([v,t])=>`<button class="chip ${fHand===v?'on':''}" data-h="${v}">${t}</button>`).join('')}</div>
  <span class="lbl">Finger</span><div class="chips"><button class="chip ${fFinger===''?'on':''}" data-f="">All</button>${FINGERS.map((f,i)=>`<button class="chip ${fFinger===String(i)?'on':''}" data-f="${i}">${f} <small>${cnt(i)}</small></button>`).join('')}</div>
  ${cols.length?`<span class="lbl">Color</span><div class="chips"><button class="chip ${fColor===''?'on':''}" data-c="">All</button>${cols.map(c=>`<button class="sw ${fColor===c.h?'on':''}" data-c="${c.h}" title="${esc(cname(c))}" style="background:${c.h}"></button>`).join('')}</div>`:''}
- ${list.length?`<div class="gal">${list.map(i=>`<button class="th" data-v="${i.id}" style="background-image:url(${TH[i.id]})">${i.finger!==''?`<span class="badge">${i.hand||''} ${FINGERS[i.finger]}</span>`:''}<span class="dots">${i.colors.slice(0,5).map(c=>`<i style="background:${c.h}"></i>`).join('')}</span></button>`).join('')}</div>`
+ ${list.length?`<div class="gal">${list.map(i=>`<button class="th" data-v="${i.id}" style="background-image:url(${TH[i.id]})">${i.finger!==''?`<span class="badge">${i.hand||''} ${FINGERS[i.finger]}</span>`:''}${i.mock?'<span class="mk">✨</span>':''}<span class="dots">${i.colors.slice(0,5).map(c=>`<i style="background:${c.h}"></i>`).join('')}</span></button>`).join('')}</div>`
  :`<div class="empty">${M.images.length?'No pictures match these filters.':'Your board is empty.<br>Tap “Add pictures” to save your nail inspo 💕'}</div>`}`}
 function mini(s){return `<div class="mini">${['L','R'].flatMap(h=>[0,1,2,3,4].map(i=>{const id=s.slots[h+i];return `<i style="${id&&TH[id]?`background-image:url(${TH[id]})`:''}"></i>`})).join('')}</div>`}
 function vSets(){const s=curSet();
@@ -147,12 +154,22 @@ function modal(h){const r=$('#modalRoot');r.innerHTML=`<div class="modal"><div c
 function close(){$('#modalRoot').innerHTML='';render()}
 function viewImg(id){const i=imgById(id);
  const sh=modal(`<img class="big" src="${IMG[id]}">
+ <button class="clear" id="clr2" data-keep="make-it-clearer">✨ Make it clearer</button>
+ <div id="mk" data-keep="nail-mockup-slot"></div>
  <span class="lbl">Hand</span><div class="chips" id="hh"></div>
  <span class="lbl">Finger</span><div class="chips" id="ff"></div>
  <span class="lbl">Colors</span><div class="chips" id="cc"></div>
  <div class="row" style="margin-top:8px"><input type="color" id="cp" value="#f29bb5" style="width:56px;height:48px;border:0;background:none;padding:0"><input type="text" id="cn" placeholder="Custom color name (optional)" style="flex:1;min-width:0"><button id="ca">Add</button></div>
  <span class="lbl">Note</span><textarea id="nn" rows="2" placeholder="Anything to remember…">${esc(i.note)}</textarea>
  <div class="row" style="margin-top:14px"><button class="dng" id="rm">Delete</button><button class="pri" id="ok" style="flex:1">Done</button></div>`);
+ const drawMock=()=>{sh.querySelector('#mk').innerHTML=i.mock&&IMG[i.mock]
+  ?`<div class="mock"><span class="lbl" style="margin-top:0">Clear mockup</span><img src="${IMG[i.mock]}"><div class="row" style="margin-top:8px"><button id="mch" style="flex:1">Change mockup</button><button class="dng" id="mrm">Remove</button></div></div>`
+  :`<button id="madd" style="width:100%;margin-top:8px">＋ Add the mockup Inu sent</button>`;
+  const add=()=>{$('#mfile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const u=URL.createObjectURL(f);try{const mid=uid();IMG[mid]=await shrink(u,1400);await put('img:'+mid,IMG[mid]);if(i.mock){delete IMG[i.mock];await del('img:'+i.mock)}i.mock=mid;save();drawMock();toast('Mockup added ✨')}catch(x){toast('Could not open that picture')}URL.revokeObjectURL(u)};$('#mfile').click()};
+  const a=sh.querySelector('#madd')||sh.querySelector('#mch');if(a)a.onclick=add;
+  const r=sh.querySelector('#mrm');if(r)r.onclick=async()=>{if(!confirm('Remove this mockup?'))return;delete IMG[i.mock];await del('img:'+i.mock);delete i.mock;save();drawMock()}};
+ drawMock();
+ sh.querySelector('#clr2').onclick=()=>clearer(id);
  const draw=()=>{
   sh.querySelector('#hh').innerHTML=[['','None'],['L','Left'],['R','Right']].map(([v,t])=>`<button class="chip ${i.hand===v?'on':''}" data-a="${v}">${t}</button>`).join('');
   sh.querySelector('#ff').innerHTML=`<button class="chip ${i.finger===''?'on':''}" data-b="">None</button>`+FINGERS.map((f,k)=>`<button class="chip ${i.finger===k?'on':''}" data-b="${k}">${f}</button>`).join('');
@@ -165,7 +182,19 @@ function viewImg(id){const i=imgById(id);
  sh.querySelector('#ca').onclick=()=>{const h=sh.querySelector('#cp').value,n=sh.querySelector('#cn').value.trim();if(!i.colors.some(c=>c.h===h))i.colors.push({n,h});sh.querySelector('#cn').value='';save();draw()};
  sh.querySelector('#nn').oninput=e=>{i.note=e.target.value;save()};
  sh.querySelector('#ok').onclick=close;
- sh.querySelector('#rm').onclick=async()=>{if(!confirm('Delete this picture?'))return;M.images=M.images.filter(x=>x!==i);M.sets.forEach(s=>{for(const k in s.slots)if(s.slots[k]===id)delete s.slots[k]});delete IMG[id];delete TH[id];await del('img:'+id);await del('th:'+id);if(String(fColor)&&!M.images.some(x=>x.colors.some(c=>c.h===fColor)))fColor='';save();close()}}
+ sh.querySelector('#rm').onclick=async()=>{if(!confirm('Delete this picture?'))return;M.images=M.images.filter(x=>x!==i);M.sets.forEach(s=>{for(const k in s.slots)if(s.slots[k]===id)delete s.slots[k]});if(i.mock){delete IMG[i.mock];await del('img:'+i.mock)}delete IMG[id];delete TH[id];await del('img:'+id);await del('th:'+id);if(String(fColor)&&!M.images.some(x=>x.colors.some(c=>c.h===fColor)))fColor='';save();close()}}
+/* ---- make it clearer: send the picture to Inu, who sends back a clean mockup ---- */
+function fileOf(u){const [h,b]=u.split(',');const t=(h.match(/data:([^;]+)/)||[])[1]||'image/jpeg',x=atob(b),a=new Uint8Array(x.length);for(let k=0;k<x.length;k++)a[k]=x.charCodeAt(k);return new File([a],'nail-picture.'+(t.split('/')[1]||'jpg'),{type:t})}
+function clearer(id){
+ let f=null;try{f=fileOf(IMG[id])}catch(e){}
+ if(f&&navigator.canShare&&navigator.canShare({files:[f]})){ // the picture alone: Inu draws any nail picture sent without words
+  navigator.share({files:[f]}).then(()=>toast('If you sent it to Inu, a clear mockup is on its way ✨')).catch(e=>{if(e&&e.name!=='AbortError')howTo(id)});return}
+ howTo(id)}
+function howTo(id){const sh=modal(`<h3 style="margin:0 0 4px;font:italic 20px Georgia,serif;color:var(--rose2)">Send it to Inu</h3>
+ <img class="big" src="${IMG[id]}">
+ <ol class="steps"><li>Press and hold the picture, then tap <b>Save to Photos</b>.</li><li>Tap <b>Open Telegram</b> below and send the picture to Inu.</li><li>Inu sends back a clear mockup. Save it, then tap <b>＋ Add the mockup Inu sent</b> on this picture.</li></ol>
+ <div class="row" style="margin-top:14px"><button id="ok">Back</button><a class="pri" href="${BOT}" target="_blank" rel="noopener" style="flex:1;display:flex;align-items:center;justify-content:center;border-radius:14px;min-height:48px;text-decoration:none;font-weight:600">Open Telegram</a></div>`);
+ sh.querySelector('#ok').onclick=()=>viewImg(id)}
 function pick(k){const s=curSet(),h=k[0],f=+k[1];
  const score=i=>(i.hand===h?1:0)+(i.finger===f?2:0);
  const list=[...M.images].sort((a,b)=>score(b)-score(a));
